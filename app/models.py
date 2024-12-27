@@ -40,6 +40,7 @@ class Role(db.Model):
         }
     
 class Employees(db.Model):
+    __tablename__ = 'employees'
     EmployeeID = db.Column(db.Integer, primary_key=True)
     CompanyID = db.Column(db.Integer, db.ForeignKey('companies.CompanyID'), nullable=False)
     CompanyEmployeeID = db.Column(db.String(50), nullable=False)
@@ -49,7 +50,7 @@ class Employees(db.Model):
     ManagerID = db.Column(db.Integer, db.ForeignKey('employees.EmployeeID'))
 
 class ReimbursementRequest(db.Model):
-    __tablename__ = 'ReimbursementRequests'
+    __tablename__ = 'reimbursementrequests'
 
     RequestID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     EmployeeID = db.Column(db.Integer, db.ForeignKey('employees.EmployeeID'), nullable=False)
@@ -69,10 +70,10 @@ class ReimbursementRequest(db.Model):
 
 
 class ApprovalWorkflow(db.Model):
-    __tablename__ = 'ApprovalWorkflow'
+    __tablename__ = 'approvalworkflow'
 
     WorkflowID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    RequestID = db.Column(db.Integer, db.ForeignKey('ReimbursementRequests.RequestID'), nullable=False)
+    RequestID = db.Column(db.Integer, db.ForeignKey('reimbursementrequests.RequestID'), nullable=False)
     ApproverID = db.Column(db.Integer, db.ForeignKey('employees.EmployeeID'), nullable=False)
     Sequence = db.Column(db.Integer, nullable=False)  # Approval order
     Status = db.Column(db.String(50), default='Pending')  # Pending, Approved, Rejected

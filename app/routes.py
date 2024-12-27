@@ -472,11 +472,6 @@ def get_my_team_requests():
 
 @main.route('/approve-reject', methods=['POST'])
 def approve_or_reject():
-    """
-    Approve or reject a reimbursement request based on the employee's action.
-    
-    :return: JSON response indicating success or failure.
-    """
     data = request.get_json()
     request_id = data.get('RequestID')
     action = data.get('Action')
@@ -491,4 +486,41 @@ def approve_or_reject():
         return jsonify({"message": message}), status_code
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@main.route('/employees', methods=['POST'])
+def get_employees():
+    try:
+        data = request.get_json()
+        company_id = data.get('companyID')
+
+        if not company_id:
+            return jsonify({'error': 'Company ID is required'}), 400
+
+        # Fetch employees for the given company
+        employees = Employees.query.filter_by(CompanyID=company_id).all()
+
+        # Fetch all roles for the company
+        roles = {role.RoleID: role.RoleName for role in Role.query.filter_by(CompanyID=company_id).all()}
+
+        # Prepare the employee list with required details
+        employee_list = []
+        for employee in employees:
+            # Fetch manager details if ManagerID is present
+            manager = Employees.query.filter_by(EmployeeID=employee.ManagerID).first() if employee.ManagerID else None
+
+            employee_list.append({
+                'companyEmployeeID': employee.CompanyEmployeeID,
+                'name': employee.Name,
+                'email': employee.Email,
+                'roleName': roles.get(employee.RoleID, 'Unknown Role'),  # Map RoleID to RoleName
+                'manager': {
+                    'companyEmployeeID': manager.CompanyEmployeeID if manager else None,
+                    'name': manager.Name if manager else None
+                } if manager else None
+            })
+
+        return jsonify(employee_list), 200
+
+    except Exception as e:
+        return jsonify({'error': f'An error occurred: {str(e)}'}), 500
 

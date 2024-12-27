@@ -282,12 +282,6 @@ def populate_roles_and_employees(file_stream, company_id):
     return employees
 
 def create_reimbursement_request(data):
-    """
-    Inserts a new reimbursement request into the database.
-
-    :param data: Dictionary containing request data.
-    :return: Newly created ReimbursementRequest object.
-    """
     try:
         new_request = ReimbursementRequest(
             EmployeeID=data['EmployeeID'],
@@ -308,13 +302,6 @@ def create_reimbursement_request(data):
         raise e
     
 def get_approval_hierarchy(employee_id, company_id):
-    """
-    Retrieves the approval hierarchy for a given employee.
-    
-    :param employee_id: EmployeeID of the requester.
-    :param company_id: CompanyID of the requester.
-    :return: List of tuples [(ManagerID, PermissionLevel), ...] sorted by PermissionLevel.
-    """
     try:
         # Get the immediate manager of the employee
         employee = Employees.query.filter_by(EmployeeID=employee_id, CompanyID=company_id).first()
