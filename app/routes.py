@@ -10,7 +10,10 @@ main = Blueprint('main', __name__)
 SECRET_KEY = Config.SECRET_KEY
 
 # Dummy users with roles
-
+@main.route('/')
+def home():
+    return "Reimbursement Service Flask Backend"
+    
 @main.route('/login', methods=['POST'])
 def login():
     data = request.json
