@@ -428,11 +428,6 @@ def get_reimbursement_requests():
 
 @main.route('/my-team-requests', methods=['POST'])
 def get_my_team_requests():
-    """
-    Fetches reimbursement requests for the team members of a given employee.
-    
-    :return: JSON response with the list of requests.
-    """
     try:
         data = request.get_json()
         employee_id = data.get('EmployeeID')  # Extract employee ID from the request body
